@@ -1,0 +1,330 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package userinterface.InvestigatorRole;
+
+import Business.Ecosystem;
+import Business.Enterprise.Enterprise;
+import Business.Location.AddressConverter;
+import Business.Organization.InvestigatorOrganization;
+import Business.UserAccount.UserAccount;
+import Business.WorkQueue.AlarmWorkRequest;
+import Business.WorkQueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author deivakumaran
+ */
+public class ManagePublicLocationJPanel extends javax.swing.JPanel {
+
+    private JPanel userProcessContainer;
+    private Ecosystem business;
+    private UserAccount userAccount;
+    private InvestigatorOrganization investigatorOrganization;
+
+    private static String[] streetArray = {"tremont street", "smith street", "sussex street", "Massachusetts Avenue"};
+    // private static String[] streetArray = {"tremont street"};
+    String streetName = streetArray[(int) (Math.random() * streetArray.length)];
+    private static String[] cityArray = {"Boston"};
+    String cityName = cityArray[(int) (Math.random() * cityArray.length)];
+    private static String[] stateArray = {"Mass"};
+    String stateName = stateArray[(int) (Math.random() * stateArray.length)];
+    private static String[] countryArray = {"USA"};
+    String countryName = countryArray[(int) (Math.random() * countryArray.length)];
+    private static String[] zipCodeArray = {"02120"};
+    String zipCode = zipCodeArray[(int) (Math.random() * zipCodeArray.length)];
+    String location = "";
+    String latLong = "";
+
+    String locationArray[] = new String[10];
+
+    /**
+     * Creates new form LabAssistantWorkAreaJPanel
+     */
+    public ManagePublicLocationJPanel(JPanel userProcessContainer, Enterprise enterprise, InvestigatorOrganization investigatorOrganization, UserAccount account) {
+        //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        initComponents();
+
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.investigatorOrganization = investigatorOrganization;
+        investigatorNameTextField.setText(account.getUsername());
+        if (userAccount.getEmployee().getCurrentStreetName() == null) {
+            userAccount.getEmployee().setCurrentStreetName(streetName);
+            userAccount.getEmployee().setCurrentCity(cityName);
+            userAccount.getEmployee().setCurrentState(stateName);
+            userAccount.getEmployee().setCurrentCountry(countryName);
+            userAccount.getEmployee().setCurrentZipCode(zipCode);
+            location = streetName + ',' + cityName + ',' + stateName + ',' + countryName;
+            AddressConverter addressConverter = new AddressConverter();
+            latLong = addressConverter.getLocation(location);
+            locationArray = latLong.split(",");
+            latitudeTextField.setText(locationArray[0]);
+            longitudeTextField.setText(locationArray[1]);
+
+            userAccount.getEmployee().setLatitude(locationArray[0]);
+            userAccount.getEmployee().setLongitude(locationArray[1]);
+
+        }
+        streetNameTextField.setText(userAccount.getEmployee().getCurrentStreetName());
+        cityTextField.setText(userAccount.getEmployee().getCurrentCity());
+        stateTextField.setText(userAccount.getEmployee().getCurrentState());
+        countryTextField.setText(userAccount.getEmployee().getCurrentCountry());
+        zipCodeTextField.setText(userAccount.getEmployee().getCurrentZipCode());
+
+        latitudeTextField.setText(userAccount.getEmployee().getLatitude());
+        longitudeTextField.setText(userAccount.getEmployee().getLongitude());
+
+        populateTable();
+    }
+
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) workRequestJTable.getModel();
+
+        model.setRowCount(0);
+
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if ((request.getName()).equals(WorkRequest.Type.Alarm.getValue())) {
+                AlarmWorkRequest alarmRequest = (AlarmWorkRequest) request;
+                Object[] row = new Object[7];
+                row[0] = alarmRequest;
+                row[1] = alarmRequest.getSender().getEmployee().getName();
+                row[2] = alarmRequest.getReceiver() == null ? null : alarmRequest.getReceiver().getEmployee().getName();
+                row[3] = alarmRequest.getStreetline1();
+                row[4] = alarmRequest.getCity();
+                row[5] = alarmRequest.getZipCode();
+                model.addRow(row);
+            }
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        workRequestJTable = new javax.swing.JTable();
+        processJButton = new javax.swing.JButton();
+        refreshJButton = new javax.swing.JButton();
+        cityTextField = new javax.swing.JTextField();
+        cityLabel = new javax.swing.JLabel();
+        streetNameTextField = new javax.swing.JTextField();
+        streetNameLabel = new javax.swing.JLabel();
+        zipCodeTextField = new javax.swing.JTextField();
+        zipCodeLabel = new javax.swing.JLabel();
+        stateTextField = new javax.swing.JTextField();
+        stateLabel = new javax.swing.JLabel();
+        countryTextField = new javax.swing.JTextField();
+        stateLabel1 = new javax.swing.JLabel();
+        locationLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        investigatorNameTextField = new javax.swing.JTextField();
+        investigatorNameLabel = new javax.swing.JLabel();
+        backButton = new javax.swing.JButton();
+        latitudeTextField = new javax.swing.JTextField();
+        latitudeLabel = new javax.swing.JLabel();
+        longitudeTextField = new javax.swing.JTextField();
+        longitudeLabel = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(196, 232, 255));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        workRequestJTable.setBackground(new java.awt.Color(225, 244, 255));
+        workRequestJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Message", "Sender", "Receiver", "Street", "City", "Zip Code", "country"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(workRequestJTable);
+        if (workRequestJTable.getColumnModel().getColumnCount() > 0) {
+            workRequestJTable.getColumnModel().getColumn(0).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(1).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(2).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(3).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(4).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(5).setResizable(false);
+            workRequestJTable.getColumnModel().getColumn(6).setResizable(false);
+        }
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 140, 610, 160));
+
+        processJButton.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        processJButton.setText("View Details");
+        processJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processJButtonActionPerformed(evt);
+            }
+        });
+        add(processJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 600, -1, -1));
+
+        refreshJButton.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        refreshJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userinterface/InvestigatorRole/1481526150_gtk-refresh.png"))); // NOI18N
+        refreshJButton.setText("Refresh");
+        refreshJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshJButtonActionPerformed(evt);
+            }
+        });
+        add(refreshJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 100, 110, 30));
+
+        cityTextField.setEnabled(false);
+        add(cityTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 400, 140, -1));
+
+        cityLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        cityLabel.setText("City");
+        add(cityLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 400, 60, -1));
+
+        streetNameTextField.setEnabled(false);
+        add(streetNameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, 140, -1));
+
+        streetNameLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        streetNameLabel.setText("Street Name");
+        add(streetNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 370, -1, -1));
+
+        zipCodeTextField.setEnabled(false);
+        add(zipCodeTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 460, 140, -1));
+
+        zipCodeLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        zipCodeLabel.setText("Zip Code");
+        add(zipCodeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 460, 80, -1));
+
+        stateTextField.setEnabled(false);
+        add(stateTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 140, -1));
+
+        stateLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        stateLabel.setText("State");
+        add(stateLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 430, 40, -1));
+
+        countryTextField.setEnabled(false);
+        add(countryTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 490, 140, -1));
+
+        stateLabel1.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        stateLabel1.setText("Country");
+        add(stateLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 490, 80, -1));
+
+        locationLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        locationLabel.setText("Your Current Location:");
+        add(locationLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 330, 160, 30));
+
+        jLabel1.setFont(new java.awt.Font("Calibri", 3, 24)); // NOI18N
+        jLabel1.setText("Public Emergengy Request ");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 40, 330, 20));
+
+        investigatorNameTextField.setEnabled(false);
+        add(investigatorNameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 110, 120, -1));
+
+        investigatorNameLabel.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        investigatorNameLabel.setText("Investigator Name");
+        add(investigatorNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 110, -1, -1));
+
+        backButton.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userinterface/InvestigatorRole/Back3Blue.png"))); // NOI18N
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+        add(backButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 600, 110, 30));
+
+        latitudeTextField.setEnabled(false);
+        add(latitudeTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 520, 140, -1));
+
+        latitudeLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        latitudeLabel.setText("Latitude");
+        add(latitudeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 530, 80, 20));
+
+        longitudeTextField.setEnabled(false);
+        add(longitudeTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 560, 140, -1));
+
+        longitudeLabel.setFont(new java.awt.Font("Calibri", 3, 12)); // NOI18N
+        longitudeLabel.setText("Longitude");
+        add(longitudeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 560, 90, 20));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userinterface/InvestigatorRole/Map.jpg"))); // NOI18N
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 370, 340, 170));
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void processJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processJButtonActionPerformed
+
+        int selectedRow = workRequestJTable.getSelectedRow();
+
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please Select Atleast one Row to View Details", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        AlarmWorkRequest alarmWorkRequest = (AlarmWorkRequest) workRequestJTable.getValueAt(selectedRow, 0);
+
+        // alarmWorkRequest.setStatus("Processing");
+        ProcessWorkRequestJPanel processWorkRequestJPanel = new ProcessWorkRequestJPanel(userProcessContainer, alarmWorkRequest);
+        userProcessContainer.add("processWorkRequestJPanel", processWorkRequestJPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+
+    }//GEN-LAST:event_processJButtonActionPerformed
+
+    private void refreshJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshJButtonActionPerformed
+        populateTable();
+    }//GEN-LAST:event_refreshJButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JLabel cityLabel;
+    private javax.swing.JTextField cityTextField;
+    private javax.swing.JTextField countryTextField;
+    private javax.swing.JLabel investigatorNameLabel;
+    private javax.swing.JTextField investigatorNameTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel latitudeLabel;
+    private javax.swing.JTextField latitudeTextField;
+    private javax.swing.JLabel locationLabel;
+    private javax.swing.JLabel longitudeLabel;
+    private javax.swing.JTextField longitudeTextField;
+    private javax.swing.JButton processJButton;
+    private javax.swing.JButton refreshJButton;
+    private javax.swing.JLabel stateLabel;
+    private javax.swing.JLabel stateLabel1;
+    private javax.swing.JTextField stateTextField;
+    private javax.swing.JLabel streetNameLabel;
+    private javax.swing.JTextField streetNameTextField;
+    private javax.swing.JTable workRequestJTable;
+    private javax.swing.JLabel zipCodeLabel;
+    private javax.swing.JTextField zipCodeTextField;
+    // End of variables declaration//GEN-END:variables
+}
